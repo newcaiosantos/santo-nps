@@ -47,7 +47,7 @@ export default function Generator() {
 
 
                 <div className="margin-top">
-                    <Button type="submit" variant="contained" color="primary">Gerar Pesquisa NPS</Button>
+                    <Button disabled={!target} type="submit" variant="contained" color="primary">Gerar Pesquisa NPS</Button>
                 </div>
             </form>
         </div>

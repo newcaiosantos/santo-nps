@@ -3,6 +3,7 @@ import {
     useParams
 } from "react-router-dom"
 import { useHistory } from "react-router-dom"
+import Button from '@material-ui/core/Button'
 
 const Answer = () => {
 
@@ -32,25 +33,27 @@ const Answer = () => {
             .firebase
             .firestore()
             .collection("answer")
-            .add({ score, survey:`/survey/${id}` })
+            .add({ score, survey: `/survey/${id}` })
             .then(({ id }) => history.push(`/survey/${id}/tks`))
             .catch(console.log)
     }
 
     return (
         <div>
-            <h2>Pesquisa NPS</h2>
-            <h3>{survey?.question}</h3>
-            <button onClick={() => addAnswer(1)}>1</button>
-            <button onClick={() => addAnswer(2)}>2</button>
-            <button onClick={() => addAnswer(3)}>3</button>
-            <button onClick={() => addAnswer(4)}>4</button>
-            <button onClick={() => addAnswer(5)}>5</button>
-            <button onClick={() => addAnswer(6)}>6</button>
-            <button onClick={() => addAnswer(7)}>7</button>
-            <button onClick={() => addAnswer(8)}>8</button>
-            <button onClick={() => addAnswer(9)}>9</button>
-            <button onClick={() => addAnswer(10)}>10</button>
+            <h2 className="line-height-3">Em uma escala de 0 a 10, o quanto você indicaria <strong>{survey?.target || '...'}</strong> para um amigo?</h2>
+            <div className="margin-top nps-answer-grid">
+                <Button variant="contained" size="small" onClick={() => addAnswer(0)}>0</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(1)}>1</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(2)}>2</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(3)}>3</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(4)}>4</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(5)}>5</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(6)}>6</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(7)}>7</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(8)}>8</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(9)}>9</Button>
+                <Button variant="contained" size="small" onClick={() => addAnswer(10)}>10</Button>
+            </div>
         </div>
     )
 }

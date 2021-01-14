@@ -1,7 +1,7 @@
 export default function Thanks(){
     return (
         <div>
-            Obrigado!
+            <h2>Obrigado!</h2>
         </div>
     )
 }

@@ -3,17 +3,21 @@ import { useHistory } from "react-router-dom"
 import {
     useParams
 } from "react-router-dom"
+import Button from '@material-ui/core/Button'
+import Snackbar from '@material-ui/core/Snackbar'
+import GaugeChart from 'react-gauge-chart'
 
 const Survey = () => {
 
     let { id } = useParams()
     const [survey, setSurvey] = useState({})
     const [answers, setAnswers] = useState([])
+    const [copied, setCopied] = useState(false)
+    const [nps, setNps] = useState(0)
 
     const history = useHistory()
 
     const collection = (collectionId) => window.firebase.firestore().collection(collectionId)
-
 
     useEffect(() => {
 
@@ -29,30 +33,25 @@ const Survey = () => {
         const getAnswers = () => {
             collection("answer")
                 .where("survey", "==", `/survey/${id}`)
-                .get()
-                .then(function (querySnapshot) {
+                .onSnapshot(function (querySnapshot) {
                     const answers = []
                     querySnapshot.forEach(function (doc) {
                         const answer = { score: doc.data().score }
-                        console.log('answer:', answer);
+                        console.log('answer:', answer)
                         answers.push(answer)
                     })
                     setAnswers(answers)
+                    setNps(calcNps(answers.map(it => it.score)))
                 })
-                .catch(console.log)
         }
-
         getSurvey()
         getAnswers()
     }, [id])
 
-    const nps = (scores) => {
-
+    const calcNps = (scores) => {
         if (!scores || !scores.length) return 0
-
         const detractors = scores.filter(it => it < 7)
         const promoters = scores.filter(it => it > 8)
-
         return ((promoters.length / scores.length) -
             (detractors.length / scores.length)) * 100
 
@@ -60,21 +59,52 @@ const Survey = () => {
 
     const copyLink = () => {
         navigator.clipboard.writeText(`https://ncs-santonps.web.app/survey/${id}/answer`)
+        setCopied(true)
     }
 
     const goToAnswer = () => {
         history.push(`/survey/${id}/answer`)
     }
 
+    const handleClickedClose = (event, reason) => {
+        if (reason === 'clickaway') return
+        setCopied(false)
+    }
+
     return (
         <div>
-            <h2>Pesquisa NPS</h2>
-            <h3>{survey?.question}</h3>
-            <button onClick={copyLink}>Copiar Link Para Responder</button>
-            <button onClick={goToAnswer}>Responder Agora</button>
-            <p>Respostas: {answers.length}</p>
-            <p>Notas: {answers.map(it=>it.score).join(', ')}</p>
-            <p>NPS: {nps(answers.map(it => it.score))}</p>
+            <Snackbar
+                message="link copiado!"
+                open={copied}
+                autoHideDuration={2000}
+                onClose={handleClickedClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+            ></Snackbar>
+
+            <div className="margin-top">
+                <GaugeChart
+                    percent={(100 + nps) / 200}
+                    formatTextValue={value => `NPS ${nps.toFixed(1)}`}
+                    textColor="#333"
+                    colors={["#DB4437", "#F4B400", "#4285F4", "#0F9D58"]}
+                    arcsLength={[50, 17, 17, 16]}
+
+                />
+            </div>
+
+            <h2 className="line-height-3">Em uma escala de 0 a 10, o quanto você indicaria <strong>{survey?.target || '...'}</strong> para um amigo?</h2>
+
+            <div className="margin-top">
+                <Button onClick={copyLink} variant="contained" color="primary">Compartilhar</Button> &nbsp;
+                <Button onClick={goToAnswer} variant="contained">Responder</Button>
+            </div>
+            <div className="margin-top">
+                <p><strong>{answers.length}</strong> resposta{answers.length === 1 ? '' : 's'} até o momento...</p>
+            </div>
+
         </div>
     )
 }

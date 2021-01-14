@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from "react-router-dom"
 import {
     useParams
 } from "react-router-dom"
@@ -8,6 +9,8 @@ const Survey = () => {
     let { id } = useParams()
     const [survey, setSurvey] = useState({})
     const [answers, setAnswers] = useState([])
+
+    const history = useHistory()
 
     const collection = (collectionId) => window.firebase.firestore().collection(collectionId)
 
@@ -55,10 +58,20 @@ const Survey = () => {
 
     }
 
+    const copyLink = () => {
+        navigator.clipboard.writeText(`https://ncs-santonps.web.app/survey/${id}/answer`)
+    }
+
+    const goToAnswer = () => {
+        history.push(`/survey/${id}/answer`)
+    }
+
     return (
         <div>
             <h2>Pesquisa NPS</h2>
             <h3>{survey?.question}</h3>
+            <button onClick={copyLink}>Copiar Link Para Responder</button>
+            <button onClick={goToAnswer}>Responder Agora</button>
             <p>Respostas: {answers.length}</p>
             <p>Notas: {answers.map(it=>it.score).join(', ')}</p>
             <p>NPS: {nps(answers.map(it => it.score))}</p>

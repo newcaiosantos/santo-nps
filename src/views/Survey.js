@@ -57,8 +57,13 @@ const Survey = () => {
 
     }
 
-    const copyLink = () => {
-        navigator.clipboard.writeText(`https://ncs-santonps.web.app/survey/${id}/answer`)
+    const copySurveyLink = () => {
+        navigator.clipboard.writeText(`https://santonps.com/survey/${id}/answer`)
+        setCopied(true)
+    }
+
+    const copyNPSLink = () => {
+        navigator.clipboard.writeText(`https://santonps.com/survey/${id}`)
         setCopied(true)
     }
 
@@ -98,7 +103,12 @@ const Survey = () => {
             <h2 className="line-height-3">Em uma escala de 0 a 10, o quanto você indicaria <strong>{survey?.target || '...'}</strong> para um amigo?</h2>
 
             <div className="margin-top">
-                <Button onClick={copyLink} variant="contained" color="primary">Compartilhar</Button> &nbsp;
+                <Button onClick={copySurveyLink} variant="contained" color="primary">Compartilhar Pesquisa</Button> &nbsp;
+            </div>
+            <div className="margin-top">
+                <Button onClick={copyNPSLink} variant="contained">Compartilhar NPS</Button> &nbsp;
+            </div>
+            <div className="margin-top">
                 <Button onClick={goToAnswer} variant="contained">Responder</Button>
             </div>
             <div className="margin-top">

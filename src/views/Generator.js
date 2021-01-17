@@ -15,13 +15,15 @@ export default function Generator() {
             .firebase
             .firestore()
             .collection("survey")
-            .add({ target })
+            .add({ target, moment: new Date() })
             .then(({ id }) => history.push(`/survey/${id}`))
             .catch(console.log)
     }
 
     return (
         <div>
+            <img src="img/aureola.png" />
+
             <h2>SANTO <strong>NPS</strong></h2>
             <p><small>PESQUISAS NPS <strong>RÁPIDAS</strong>!</small></p>
 

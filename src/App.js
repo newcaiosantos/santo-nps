@@ -22,9 +22,6 @@ export default function App() {
           <Route path="/survey/:id/answer">
             <Answer />
           </Route>
-          <Route path="/survey/:id/tks">
-            <Thanks />
-          </Route>
         </Switch>
     </Router>
   )

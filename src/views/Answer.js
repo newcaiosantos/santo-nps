@@ -4,11 +4,13 @@ import {
 } from "react-router-dom"
 import { useHistory } from "react-router-dom"
 import Button from '@material-ui/core/Button'
+import Thanks from './Thanks'
 
 const Answer = () => {
 
     let { id } = useParams()
     const [survey, setSurvey] = useState({})
+    const [answered, setAnswered] = useState(false)
 
     const history = useHistory()
 
@@ -25,7 +27,12 @@ const Answer = () => {
             })
         }
 
-        getSurvey()
+        if (getAnsweredSurveys().indexOf(id) > -1) {
+            setAnswered(true)
+        } else {
+            getSurvey()
+        }
+
     }, [id])
 
     const addAnswer = score => {
@@ -33,12 +40,24 @@ const Answer = () => {
             .firebase
             .firestore()
             .collection("answer")
-            .add({ score, survey: `/survey/${id}` })
-            .then(({ id }) => history.push(`/survey/${id}/tks`))
+            .add({ score, survey: `/survey/${id}`, moment: new Date() })
+            .then(onAddAnswer)
             .catch(console.log)
     }
 
-    return (
+    const getAnsweredSurveys = () => JSON.parse(localStorage.getItem('answered') || '[]')
+    const addAnsweredSurvey = surveyId => localStorage.setItem('answered', JSON.stringify([...getAnsweredSurveys(), surveyId]))
+
+    const onAddAnswer = () => {
+        addAnsweredSurvey(id)
+        goToTks()
+    }
+
+    const goToTks = () => setAnswered(true)
+
+    return answered ?
+        <Thanks />
+        :
         <div>
             <h2 className="line-height-3">Em uma escala de 0 a 10, o quanto você indicaria <strong>{survey?.target || '...'}</strong> para um amigo?</h2>
             <div className="margin-top nps-answer-grid">
@@ -55,7 +74,6 @@ const Answer = () => {
                 <Button variant="contained" size="small" onClick={() => addAnswer(10)}>10</Button>
             </div>
         </div>
-    )
 }
 
 export default Answer

@@ -22,7 +22,7 @@ export default function Generator() {
 
     return (
         <div>
-            <img src="img/aureola.png" />
+            <img alt="" src="img/aureola.png" />
 
             <h2>SANTO <strong>NPS</strong></h2>
             <p><small>PESQUISAS NPS <strong>RÁPIDAS</strong>!</small></p>

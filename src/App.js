@@ -7,7 +7,6 @@ import {
 import Generator from "./views/Generator"
 import Survey from "./views/Survey"
 import Answer from "./views/Answer"
-import Thanks from "./views/Thanks"
 
 export default function App() {
   return (

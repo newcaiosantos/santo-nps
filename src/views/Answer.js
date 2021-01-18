@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {
     useParams
 } from "react-router-dom"
-import { useHistory } from "react-router-dom"
 import Button from '@material-ui/core/Button'
 import Thanks from './Thanks'
 
@@ -11,8 +10,6 @@ const Answer = () => {
     let { id } = useParams()
     const [survey, setSurvey] = useState({})
     const [answered, setAnswered] = useState(false)
-
-    const history = useHistory()
 
     const collection = (collectionId) => window.firebase.firestore().collection(collectionId)
 
